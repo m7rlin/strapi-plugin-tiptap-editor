@@ -151,17 +151,6 @@ export const TiptapInputStyles = styled.div`
     margin: 0.75em 0;
   }
 
-  /* Image alignment — text-align on the node wrapper centres the inline-block image container */
-  [data-align="center"] {
-    text-align: center;
-  }
-
-  [data-align="right"] {
-    text-align: right;
-  }
-
-  /* data-align="left" and null: natural left flow, no rule needed */
-
   /* Inline-block wrapper for positioning the resize handle relative to the image */
   .image-wrapper {
     position: relative;

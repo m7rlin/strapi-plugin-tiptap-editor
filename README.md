@@ -425,13 +425,14 @@ Enables image insertion from the Strapi Media Library. When enabled, the toolbar
 - The image appears in the editor at its natural size (constrained to editor width)
 - Alt text is prefilled from the asset's `alternativeText` metadata
 - Clicking a selected image opens a popover with:
-  - Three **alignment** buttons (left, center, right)
   - **Width** and **Height** inputs (in pixels) for precise sizing
   - A **reset** button to restore the original dimensions
+  - **Caption** input (rendered as `<figure>`/`<figcaption>` when set)
   - **Alt text** input and a **delete** button
 - A **resize handle** (blue dot) appears at the bottom-right corner on hover — drag it to resize the image
+- The HTML `title` attribute is pre-filled from the asset's Media Library **caption** field on insert
 
-The image stores the URL (`src`), Strapi asset ID (`data-asset-id`), alignment (`data-align`), and dimensions (`width`, `height`) in the Tiptap JSON output.
+The image stores the URL (`src`), Strapi asset ID (`data-asset-id`), optional `caption`/`title`, and dimensions (`width`, `height`) in the Tiptap JSON output.
 
 **Content safety:** If you remove `mediaLibrary` from a preset, existing images in content are preserved and rendered read-only — they are never silently deleted.
 
@@ -466,7 +467,7 @@ The image stores the URL (`src`), Strapi asset ID (`data-asset-id`), alignment (
 
 #### Rendering images on the frontend
 
-The plugin stores content as **Tiptap/ProseMirror JSON**. The `width`, `height`, `src`, `alt`, and `title` attributes are standard and will render automatically with `@tiptap/extension-image`. However, the custom `data-align` and `data-asset-id` attributes require extending the Image extension on your frontend:
+The plugin stores content as **Tiptap/ProseMirror JSON**. The `width`, `height`, `src`, `alt`, and `title` attributes are standard and will render automatically with `@tiptap/extension-image`. However, the custom `data-asset-id` and `caption` attributes require extending the Image extension on your frontend (render a `<figure>`/`<figcaption>` when `caption` is set):
 
 ```ts
 import { generateHTML } from '@tiptap/html';
@@ -478,8 +479,8 @@ const StrapiImage = Image.extend({
   addAttributes() {
     return {
       ...this.parent?.(),
-      'data-align': { default: null },
       'data-asset-id': { default: null },
+      caption: { default: null, renderHTML: () => ({}) },
     };
   },
 });
@@ -490,22 +491,6 @@ const html = generateHTML(apiResponse.content, [
   StrapiImage,
   // ...other extensions you use
 ]);
-```
-
-Then add CSS for alignment on your frontend:
-
-```css
-img[data-align="center"] {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-img[data-align="right"] {
-  display: block;
-  margin-left: auto;
-  margin-right: 0;
-}
 ```
 
 ## Theme

@@ -997,11 +997,11 @@
       "attrs": {
         "src": "https://example.com/test-image.jpg",
         "alt": "Test image alt text",
-        "title": null,
+        "title": "Tooltip title from the Media Library caption",
         "data-asset-id": 42,
-        "data-align": "center",
         "width": 400,
-        "height": 300
+        "height": 300,
+        "caption": null
       }
     },
     {
@@ -1011,7 +1011,6 @@
         "alt": null,
         "title": null,
         "data-asset-id": null,
-        "data-align": null,
         "width": null,
         "height": null
       }
@@ -1023,7 +1022,6 @@
         "alt": "Right-aligned test image",
         "title": null,
         "data-asset-id": 99,
-        "data-align": "right",
         "width": 250,
         "height": 180
       }
@@ -1035,7 +1033,6 @@
         "alt": "Explicitly left-aligned test image",
         "title": null,
         "data-asset-id": 100,
-        "data-align": "left",
         "width": null,
         "height": null
       }
@@ -1212,10 +1209,14 @@
       ]
     },
     {
-      "type": "captionedImage",
+      "type": "image",
       "attrs": {
         "src": "/uploads/example.jpg",
         "alt": "Example",
+        "title": null,
+        "width": null,
+        "height": null,
+        "data-asset-id": null,
         "caption": "Lorem ipsum caption text"
       }
     },

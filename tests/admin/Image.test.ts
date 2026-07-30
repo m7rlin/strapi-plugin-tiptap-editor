@@ -72,9 +72,42 @@ describe('StrapiImage extension', () => {
       expect((attrs['data-asset-id'] as any).default).toBeNull();
     });
 
-    it('includes data-align attribute with default null', () => {
-      expect(attrs).toHaveProperty('data-align');
-      expect((attrs['data-align'] as any).default).toBeNull();
+    it('has no data-align attribute (article images are full-column, no text wrap)', () => {
+      expect(attrs).not.toHaveProperty('data-align');
+    });
+
+    it('includes caption attribute with default null and no HTML attribute output', () => {
+      expect(attrs).toHaveProperty('caption');
+      expect((attrs.caption as any).default).toBeNull();
+      // caption becomes a <figcaption> element, never an attribute
+      expect(((attrs.caption as any).renderHTML as () => Record<string, unknown>)()).toEqual({});
+    });
+
+    describe('node renderHTML (caption → figure)', () => {
+      const renderHTMLFn = (StrapiImage as any).config.renderHTML as (
+        this: { options: { HTMLAttributes: Record<string, unknown> } },
+        args: { node: { attrs: Record<string, unknown> }; HTMLAttributes: Record<string, unknown> }
+      ) => unknown;
+      const thisArg = { options: { HTMLAttributes: {} } };
+
+      it('renders a bare img when caption is empty', () => {
+        const out = renderHTMLFn.call(thisArg, {
+          node: { attrs: { caption: null } },
+          HTMLAttributes: { src: 'a.jpg' },
+        }) as unknown[];
+        expect(out[0]).toBe('img');
+      });
+
+      it('renders figure > img + figcaption when caption is set', () => {
+        const out = renderHTMLFn.call(thisArg, {
+          node: { attrs: { caption: 'Podpis' } },
+          HTMLAttributes: { src: 'a.jpg' },
+        }) as unknown[];
+        expect(out[0]).toBe('figure');
+        expect(out[1]).toEqual({ 'data-image-figure': '' });
+        expect(out[2]).toEqual(['img', { src: 'a.jpg' }]);
+        expect(out[3]).toEqual(['figcaption', 'Podpis']);
+      });
     });
 
     describe('data-asset-id parseHTML', () => {
@@ -109,36 +142,6 @@ describe('StrapiImage extension', () => {
 
       it('returns {} for undefined', () => {
         expect(renderHTML({ 'data-asset-id': undefined })).toEqual({});
-      });
-    });
-
-    describe('data-align parseHTML', () => {
-      const parseHTML = (attrs['data-align'] as any).parseHTML as (el: HTMLElement) => string | null;
-
-      it('returns the attribute value string for "center"', () => {
-        const el = { getAttribute: (name: string) => name === 'data-align' ? 'center' : null } as unknown as HTMLElement;
-        expect(parseHTML(el)).toBe('center');
-      });
-
-      it('returns null when attribute is absent', () => {
-        const el = { getAttribute: (_name: string) => null } as unknown as HTMLElement;
-        expect(parseHTML(el)).toBeNull();
-      });
-    });
-
-    describe('data-align renderHTML', () => {
-      const renderHTML = (attrs['data-align'] as any).renderHTML as (attrs: Record<string, unknown>) => Record<string, unknown>;
-
-      it('returns { data-align: "center" } for "center"', () => {
-        expect(renderHTML({ 'data-align': 'center' })).toEqual({ 'data-align': 'center' });
-      });
-
-      it('returns {} for null', () => {
-        expect(renderHTML({ 'data-align': null })).toEqual({});
-      });
-
-      it('returns {} for empty string', () => {
-        expect(renderHTML({ 'data-align': '' })).toEqual({});
       });
     });
 

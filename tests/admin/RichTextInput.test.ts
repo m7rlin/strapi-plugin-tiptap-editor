@@ -130,11 +130,6 @@ vi.mock('../../admin/src/extensions/Callout', () => ({
   useCallout: () => mockCallout,
   Callout: {},
 }));
-const mockCaptionedImage = { captionedImageButton: null, captionedImageDialog: null };
-vi.mock('../../admin/src/extensions/CaptionedImage', () => ({
-  useCaptionedImage: () => mockCaptionedImage,
-  CaptionedImage: {},
-}));
 const mockCta = { ctaButton: null };
 vi.mock('../../admin/src/extensions/CtaButton', () => ({
   useCtaButton: () => mockCta,

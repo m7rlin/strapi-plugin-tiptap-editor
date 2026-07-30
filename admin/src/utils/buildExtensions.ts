@@ -13,7 +13,6 @@ import { CodeBlockWithFilename } from '../extensions/CodeBlock';
 import { ColorHighlighter } from '../extensions/ColorHighlighter';
 import { YoutubeEmbed } from '../extensions/Youtube';
 import { Callout } from '../extensions/Callout';
-import { CaptionedImage } from '../extensions/CaptionedImage';
 import { CtaButton } from '../extensions/CtaButton';
 import { TiptapPresetConfig, isFeatureEnabled, getFeatureOptions } from '../../../shared/types';
 
@@ -131,9 +130,6 @@ export function buildExtensions(config: TiptapPresetConfig): Extensions {
   }
   if (isFeatureEnabled(config.callout)) {
     extensions.push(Callout);
-  }
-  if (isFeatureEnabled(config.captionedImage)) {
-    extensions.push(CaptionedImage);
   }
   if (isFeatureEnabled(config.ctaButton)) {
     extensions.push(CtaButton);

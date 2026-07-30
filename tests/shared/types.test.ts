@@ -9,8 +9,8 @@ import {
 } from '../../shared/types';
 
 describe('PRESET_FEATURE_KEYS (TYPES-03)', () => {
-  it('contains exactly 25 keys', () => {
-    expect(PRESET_FEATURE_KEYS).toHaveLength(25);
+  it('contains exactly 24 keys', () => {
+    expect(PRESET_FEATURE_KEYS).toHaveLength(24);
   });
   it('contains all expected feature names', () => {
     expect(PRESET_FEATURE_KEYS).toContain('bold');
@@ -25,8 +25,8 @@ describe('PRESET_FEATURE_KEYS (TYPES-03)', () => {
     expect(PRESET_FEATURE_KEYS).toContain('highlightColor');
     expect(PRESET_FEATURE_KEYS).toContain('youtube');
     expect(PRESET_FEATURE_KEYS).toContain('callout');
-    expect(PRESET_FEATURE_KEYS).toContain('captionedImage');
     expect(PRESET_FEATURE_KEYS).toContain('ctaButton');
+    expect(PRESET_FEATURE_KEYS).not.toContain('captionedImage');
   });
 });
 

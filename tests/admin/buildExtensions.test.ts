@@ -245,7 +245,6 @@ describe('buildExtensions', () => {
       mediaLibrary: true,
       youtube: true,
       callout: true,
-      captionedImage: true,
       ctaButton: true,
     };
     const extensions = buildExtensions(config);
@@ -265,8 +264,8 @@ describe('buildExtensions', () => {
     expect(names).toContain('codeBlock');
     expect(names).toContain('youtube');
     expect(names).toContain('callout');
-    expect(names).toContain('captionedImage');
     expect(names).toContain('ctaButton');
+    expect(names).not.toContain('captionedImage');
 
     const duplicates = names.filter((name, i) => names.indexOf(name) !== i);
     expect(duplicates).toEqual([]);
@@ -297,7 +296,6 @@ describe('buildExtensions', () => {
       mediaLibrary: false,
       youtube: false,
       callout: false,
-      captionedImage: false,
       ctaButton: false,
     };
     const extensions = buildExtensions(config);
@@ -316,7 +314,6 @@ describe('buildExtensions', () => {
     expect(names).not.toContain('codeBlock');
     expect(names).not.toContain('youtube');
     expect(names).not.toContain('callout');
-    expect(names).not.toContain('captionedImage');
     expect(names).not.toContain('ctaButton');
   });
 
@@ -334,7 +331,7 @@ describe('buildExtensions', () => {
     expect(off.map((ext: any) => ext.name)).not.toContain('codeBlock');
   });
 
-  it.each(['youtube', 'callout', 'captionedImage', 'ctaButton'] as const)(
+  it.each(['youtube', 'callout', 'ctaButton'] as const)(
     'includes the %s node only when its feature is enabled',
     (feature) => {
       const on = buildExtensions({ [feature]: true });

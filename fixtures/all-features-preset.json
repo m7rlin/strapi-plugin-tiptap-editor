@@ -25,7 +25,6 @@
       "mediaLibrary": true,
       "youtube": true,
       "callout": true,
-      "captionedImage": true,
       "ctaButton": true
     }
   }

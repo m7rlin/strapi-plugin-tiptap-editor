@@ -17,7 +17,6 @@ import { useTextColor } from '../extensions/TextColor';
 import { useHighlightColor } from '../extensions/HighlightColor';
 import { useYoutube } from '../extensions/Youtube';
 import { useCallout } from '../extensions/Callout';
-import { useCaptionedImage } from '../extensions/CaptionedImage';
 import { useCtaButton } from '../extensions/CtaButton';
 import { usePresetConfig } from '../hooks/usePresetConfig';
 import { buildExtensions } from '../utils/buildExtensions';
@@ -53,7 +52,6 @@ const InnerEditor = forwardRef<HTMLDivElement, InnerEditorProps>(
     const highlightColor = useHighlightColor(editor, { disabled: props.disabled });
     const youtube = useYoutube(editor, { disabled: props.disabled });
     const callout = useCallout(editor, { disabled: props.disabled });
-    const captionedImage = useCaptionedImage(editor, { disabled: props.disabled });
     const cta = useCtaButton(editor, { disabled: props.disabled });
 
     if (!editor) return null;
@@ -124,10 +122,6 @@ const InnerEditor = forwardRef<HTMLDivElement, InnerEditorProps>(
           <FeatureGuard featureValue={config?.mediaLibrary}>
             {image.imageButton}
             {image.imageDialog}
-          </FeatureGuard>
-          <FeatureGuard featureValue={config?.captionedImage}>
-            {captionedImage.captionedImageButton}
-            {captionedImage.captionedImageDialog}
           </FeatureGuard>
           <FeatureGuard featureValue={config?.youtube}>
             {youtube.youtubeButton}

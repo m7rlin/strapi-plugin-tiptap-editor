@@ -5,15 +5,13 @@ import type { ImageOptions } from '@tiptap/extension-image';
 import { Popover, TextInput, IconButton } from '@strapi/design-system';
 import { Trash, Cross } from '@strapi/icons';
 import { useIntl } from 'react-intl';
-import { ToolbarButton } from './ToolbarButton';
-import { TextAlignLeft } from '../icons/TextAlignLeft';
-import { TextAlignCenter } from '../icons/TextAlignCenter';
-import { TextAlignRight } from '../icons/TextAlignRight';
 
 export function ImageNodeView({ node, updateAttributes, deleteNode, selected, extension }: NodeViewProps) {
   const { formatMessage } = useIntl();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [altText, setAltText] = useState<string>(node.attrs.alt ?? '');
+  const [captionText, setCaptionText] = useState<string>(node.attrs.caption ?? '');
+  const [titleText, setTitleText] = useState<string>(node.attrs.title ?? '');
   const imgRef = useRef<HTMLImageElement>(null);
   const isResizingRef = useRef(false);
   const resizeCleanupRef = useRef<(() => void) | null>(null);
@@ -34,6 +32,14 @@ export function ImageNodeView({ node, updateAttributes, deleteNode, selected, ex
   useEffect(() => {
     setAltText(node.attrs.alt ?? '');
   }, [node.attrs.alt]);
+
+  useEffect(() => {
+    setCaptionText(node.attrs.caption ?? '');
+  }, [node.attrs.caption]);
+
+  useEffect(() => {
+    setTitleText(node.attrs.title ?? '');
+  }, [node.attrs.title]);
 
   // Sync dimension inputs when node attrs change (undo/redo, resize handle)
   useEffect(() => {
@@ -58,13 +64,6 @@ export function ImageNodeView({ node, updateAttributes, deleteNode, selected, ex
       resizeCleanupRef.current?.();
     };
   }, []);
-
-  const currentAlign = node.attrs['data-align'] as 'left' | 'center' | 'right' | null;
-
-  function handleAlign(value: 'left' | 'center' | 'right') {
-    const current = node.attrs['data-align'] as string | null;
-    updateAttributes({ 'data-align': current === value ? null : value });
-  }
 
   function handleCommit() {
     updateAttributes({ alt: altText });
@@ -174,7 +173,7 @@ export function ImageNodeView({ node, updateAttributes, deleteNode, selected, ex
   );
 
   return (
-    <NodeViewWrapper data-drag-handle data-align={node.attrs['data-align'] ?? undefined}>
+    <NodeViewWrapper data-drag-handle>
       <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <Popover.Anchor>
           <div
@@ -197,35 +196,22 @@ export function ImageNodeView({ node, updateAttributes, deleteNode, selected, ex
               }}
             />
             {resizeEnabled && <div className="image-resize-handle" onMouseDown={handleResizeStart} />}
+            {node.attrs.caption ? (
+              <div
+                style={{
+                  textAlign: 'center',
+                  fontSize: '1.2rem',
+                  color: '#666',
+                  fontStyle: 'italic',
+                  marginTop: '4px',
+                }}
+              >
+                {node.attrs.caption}
+              </div>
+            ) : null}
           </div>
         </Popover.Anchor>
         <Popover.Content side="bottom">
-          <div style={{ display: 'flex', gap: '4px', padding: '8px', paddingBottom: '0' }}>
-            <ToolbarButton
-              onClick={() => handleAlign('left')}
-              icon={<TextAlignLeft />}
-              active={currentAlign === 'left'}
-              disabled={false}
-              tooltip={formatMessage({ id: 'tiptap-editor.image.alignLeft', defaultMessage: 'Align left' })}
-              marginLeft={0}
-            />
-            <ToolbarButton
-              onClick={() => handleAlign('center')}
-              icon={<TextAlignCenter />}
-              active={currentAlign === 'center'}
-              disabled={false}
-              tooltip={formatMessage({ id: 'tiptap-editor.image.alignCenter', defaultMessage: 'Align center' })}
-              marginLeft={0}
-            />
-            <ToolbarButton
-              onClick={() => handleAlign('right')}
-              icon={<TextAlignRight />}
-              active={currentAlign === 'right'}
-              disabled={false}
-              tooltip={formatMessage({ id: 'tiptap-editor.image.alignRight', defaultMessage: 'Align right' })}
-              marginLeft={0}
-            />
-          </div>
           {resizeEnabled && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '8px', paddingBottom: '0' }}>
               <TextInput
@@ -259,6 +245,26 @@ export function ImageNodeView({ node, updateAttributes, deleteNode, selected, ex
               )}
             </div>
           )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px', paddingBottom: '0' }}>
+            <TextInput
+              placeholder={formatMessage({ id: 'tiptap-editor.image.caption', defaultMessage: 'Caption (optional)' })}
+              value={captionText}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCaptionText(e.target.value)}
+              onBlur={() => updateAttributes({ caption: captionText.trim() || null })}
+              onKeyDown={handleKeyDown}
+              aria-label={formatMessage({ id: 'tiptap-editor.image.caption', defaultMessage: 'Caption (optional)' })}
+            />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px', paddingBottom: '0' }}>
+            <TextInput
+              placeholder={formatMessage({ id: 'tiptap-editor.image.title', defaultMessage: 'Title (tooltip)' })}
+              value={titleText}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitleText(e.target.value)}
+              onBlur={() => updateAttributes({ title: titleText.trim() || null })}
+              onKeyDown={handleKeyDown}
+              aria-label={formatMessage({ id: 'tiptap-editor.image.title', defaultMessage: 'Title (tooltip)' })}
+            />
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px' }}>
             <TextInput
               placeholder={formatMessage({ id: 'tiptap-editor.image.altText', defaultMessage: 'Alt text' })}

@@ -73,8 +73,6 @@ export interface TiptapPresetConfig {
   youtube?: boolean | Record<string, unknown>;
   /** Callout block (node name `callout`, attrs.variant: info|warning|tip). */
   callout?: boolean | Record<string, unknown>;
-  /** Figure with caption (node name `captionedImage`) — inserts via the Media Library. */
-  captionedImage?: boolean | Record<string, unknown>;
   /** Call-to-action button block (node name `ctaButton`). */
   ctaButton?: boolean | Record<string, unknown>;
 }
@@ -110,7 +108,6 @@ export const PRESET_FEATURE_KEYS: Array<keyof TiptapPresetConfig> = [
   'mediaLibrary',
   'youtube',
   'callout',
-  'captionedImage',
   'ctaButton',
 ];
 

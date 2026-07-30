@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { mergeAttributes } from '@tiptap/core';
 import Image, { type ImageOptions } from '@tiptap/extension-image';
 
 interface StrapiImageOptions extends ImageOptions {
@@ -19,7 +20,7 @@ export function ImageNodeViewReadOnly({ node }: NodeViewProps) {
   const height = typeof rawHeight === 'number' ? rawHeight : null;
 
   return (
-    <NodeViewWrapper data-drag-handle data-align={node.attrs['data-align'] ?? undefined}>
+    <NodeViewWrapper data-drag-handle>
       <img
         src={node.attrs.src}
         alt={node.attrs.alt ?? ''}
@@ -31,6 +32,11 @@ export function ImageNodeViewReadOnly({ node }: NodeViewProps) {
         }}
         draggable={false}
       />
+      {node.attrs.caption ? (
+        <div style={{ textAlign: 'center', fontSize: '1.2rem', color: '#666', fontStyle: 'italic' }}>
+          {node.attrs.caption}
+        </div>
+      ) : null}
     </NodeViewWrapper>
   );
 }
@@ -60,16 +66,27 @@ export const StrapiImage = Image.extend<StrapiImageOptions>({
           return { 'data-asset-id': String(id) };
         },
       },
-      'data-align': {
+      // Optional figcaption text (replaces the former captionedImage node).
+      // Not an HTML attribute: the node-level renderHTML emits it as a
+      // <figcaption> element; parse recovers it from a wrapping <figure>.
+      caption: {
         default: null,
-        parseHTML: (element: HTMLElement) => element.getAttribute('data-align') ?? null,
-        renderHTML: (attributes: Record<string, unknown>) => {
-          const align = attributes['data-align'];
-          if (!align) return {};
-          return { 'data-align': align };
-        },
+        parseHTML: (element: HTMLElement) =>
+          element.closest('figure')?.querySelector('figcaption')?.textContent?.trim() || null,
+        renderHTML: () => ({}),
       },
     };
+  },
+
+  renderHTML({ node, HTMLAttributes }) {
+    const caption = typeof node.attrs.caption === 'string' && node.attrs.caption.trim() !== ''
+      ? node.attrs.caption
+      : null;
+    const imgAttrs = mergeAttributes(this.options.HTMLAttributes, HTMLAttributes);
+    if (!caption) {
+      return ['img', imgAttrs];
+    }
+    return ['figure', { 'data-image-figure': '' }, ['img', imgAttrs], ['figcaption', caption]];
   },
 
   addNodeView() {
@@ -104,12 +121,14 @@ export function useImage(
 
     // Alt text fallback chain (IMG-03)
     const altText = asset.alternativeText ?? asset.name ?? '';
+    // Tooltip title from the Media Library caption field, when the asset has one
+    const title = asset.caption?.trim() || null;
 
     // Insert image and ensure a paragraph follows (research pitfall 2: cursor trapped at end of doc)
     editor
       .chain()
       .focus()
-      .setImage({ src, alt: altText, 'data-asset-id': asset.id } as any)
+      .setImage({ src, alt: altText, title, 'data-asset-id': asset.id } as any)
       .createParagraphNear()
       .run();
 
