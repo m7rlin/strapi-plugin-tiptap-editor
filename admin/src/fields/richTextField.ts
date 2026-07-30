@@ -17,7 +17,7 @@ export const richTextField = {
   },
   icon: Paragraph as ComponentType<any>,
   components: {
-    Input: async () => import('../components/RichTextInput').then((m) => ({ default: m.default })),
+    Input: async () => import('../components/RichTextInput').then((module) => ({ default: module.default })),
   },
   options: {
     advanced: [

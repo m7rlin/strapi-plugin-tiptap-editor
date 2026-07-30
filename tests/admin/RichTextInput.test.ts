@@ -118,6 +118,29 @@ vi.mock('../../admin/src/extensions/Image', () => ({
   StrapiImage: { configure: vi.fn(() => ({})) },
 }));
 
+// ─── Mock custom block extension hooks ───────────────────────────────────────
+
+const mockYoutube = { youtubeButton: null, youtubeDialog: null };
+vi.mock('../../admin/src/extensions/Youtube', () => ({
+  useYoutube: () => mockYoutube,
+  YoutubeEmbed: {},
+}));
+const mockCallout = { calloutButton: null };
+vi.mock('../../admin/src/extensions/Callout', () => ({
+  useCallout: () => mockCallout,
+  Callout: {},
+}));
+const mockCaptionedImage = { captionedImageButton: null, captionedImageDialog: null };
+vi.mock('../../admin/src/extensions/CaptionedImage', () => ({
+  useCaptionedImage: () => mockCaptionedImage,
+  CaptionedImage: {},
+}));
+const mockCta = { ctaButton: null };
+vi.mock('../../admin/src/extensions/CtaButton', () => ({
+  useCtaButton: () => mockCta,
+  CtaButton: {},
+}));
+
 // ─── Mock components ──────────────────────────────────────────────────────────
 vi.mock('../../admin/src/components/BaseTiptapInput', () => ({
   default: 'BaseTiptapInput',

@@ -15,6 +15,10 @@ import { useTable } from '../extensions/Table';
 import { useTextAlign } from '../extensions/TextAlign';
 import { useTextColor } from '../extensions/TextColor';
 import { useHighlightColor } from '../extensions/HighlightColor';
+import { useYoutube } from '../extensions/Youtube';
+import { useCallout } from '../extensions/Callout';
+import { useCaptionedImage } from '../extensions/CaptionedImage';
+import { useCtaButton } from '../extensions/CtaButton';
 import { usePresetConfig } from '../hooks/usePresetConfig';
 import { buildExtensions } from '../utils/buildExtensions';
 import { TiptapPresetConfig, MINIMAL_PRESET_CONFIG, getFeatureOptions } from '../../../shared/types';
@@ -47,6 +51,10 @@ const InnerEditor = forwardRef<HTMLDivElement, InnerEditorProps>(
     const textAlign = useTextAlign(editor, { disabled: props.disabled });
     const textColor = useTextColor(editor, { disabled: props.disabled });
     const highlightColor = useHighlightColor(editor, { disabled: props.disabled });
+    const youtube = useYoutube(editor, { disabled: props.disabled });
+    const callout = useCallout(editor, { disabled: props.disabled });
+    const captionedImage = useCaptionedImage(editor, { disabled: props.disabled });
+    const cta = useCtaButton(editor, { disabled: props.disabled });
 
     if (!editor) return null;
 
@@ -116,6 +124,20 @@ const InnerEditor = forwardRef<HTMLDivElement, InnerEditorProps>(
           <FeatureGuard featureValue={config?.mediaLibrary}>
             {image.imageButton}
             {image.imageDialog}
+          </FeatureGuard>
+          <FeatureGuard featureValue={config?.captionedImage}>
+            {captionedImage.captionedImageButton}
+            {captionedImage.captionedImageDialog}
+          </FeatureGuard>
+          <FeatureGuard featureValue={config?.youtube}>
+            {youtube.youtubeButton}
+            {youtube.youtubeDialog}
+          </FeatureGuard>
+          <FeatureGuard featureValue={config?.callout}>
+            {callout.calloutButton}
+          </FeatureGuard>
+          <FeatureGuard featureValue={config?.ctaButton}>
+            {cta.ctaButton}
           </FeatureGuard>
           <FeatureGuard featureValue={config?.table}>
             <Spacer width={8} />

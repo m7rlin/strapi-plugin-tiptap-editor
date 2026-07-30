@@ -22,7 +22,11 @@
       "subscript": true,
       "textColor": true,
       "highlightColor": true,
-      "mediaLibrary": true
+      "mediaLibrary": true,
+      "youtube": true,
+      "callout": true,
+      "captionedImage": true,
+      "ctaButton": true
     }
   }
 }

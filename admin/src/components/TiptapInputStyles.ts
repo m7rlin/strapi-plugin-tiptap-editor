@@ -22,6 +22,25 @@ export const TiptapInputStyles = styled.div`
 
   /* --- Basic text styles --- */
 
+  /* Hex color chip — ColorHighlighter decorations (mirrors the web
+     renderer's .tiptap-content .color styles) */
+  .ProseMirror .color {
+    white-space: nowrap;
+  }
+
+  .ProseMirror .color::before {
+    content: ' ';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-right: 0.1em;
+    margin-bottom: 0.15em;
+    vertical-align: middle;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    border-radius: 4px;
+    background-color: var(--color);
+  }
+
   .ProseMirror p {
     margin: 0 0 12px;
   }

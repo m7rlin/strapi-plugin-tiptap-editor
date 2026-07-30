@@ -69,6 +69,14 @@ export interface TiptapPresetConfig {
   textColor?: boolean;
   highlightColor?: boolean;
   mediaLibrary?: boolean | Record<string, unknown>;
+  /** YouTube embed block (node name `youtube`) — schema mirrored by the web renderer. */
+  youtube?: boolean | Record<string, unknown>;
+  /** Callout block (node name `callout`, attrs.variant: info|warning|tip). */
+  callout?: boolean | Record<string, unknown>;
+  /** Figure with caption (node name `captionedImage`) — inserts via the Media Library. */
+  captionedImage?: boolean | Record<string, unknown>;
+  /** Call-to-action button block (node name `ctaButton`). */
+  ctaButton?: boolean | Record<string, unknown>;
 }
 
 export interface TiptapPluginConfig {
@@ -100,6 +108,10 @@ export const PRESET_FEATURE_KEYS: Array<keyof TiptapPresetConfig> = [
   'textColor',
   'highlightColor',
   'mediaLibrary',
+  'youtube',
+  'callout',
+  'captionedImage',
+  'ctaButton',
 ];
 
 // Fallback for unconfigured fields — deliberately minimal to prompt developers to configure

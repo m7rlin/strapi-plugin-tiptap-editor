@@ -74,7 +74,7 @@ const config = {
       for (const key of Object.keys(theme)) {
         if (!THEME_KEYS.has(key)) {
           throw new Error(
-            `tiptap-editor config.theme has unknown key: "${key}". Allowed keys: colors, stylesheet`
+            `tiptap-editor config.theme has unknown key: "${key}". Allowed keys: colors, css, stylesheet`
           );
         }
       }
@@ -130,7 +130,7 @@ const config = {
           if (!isValidColorValue(entry.color)) {
             throw new Error(
               `tiptap-editor config.theme.colors[${i}] has invalid color value: "${entry.color}". ` +
-                `Accepted formats: hex (#rgb, #rrggbb, #rrggbbaa), rgb(), rgba(), hsl(), hsla(), var(--name)`
+                `Accepted formats: hex (#rgb, #rgba, #rrggbb, #rrggbbaa), rgb(), rgba(), hsl(), hsla(), var(--name)`
             );
           }
         }
