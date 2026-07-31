@@ -1012,7 +1012,8 @@
         "title": null,
         "data-asset-id": null,
         "width": null,
-        "height": null
+        "height": null,
+        "size": "wide"
       }
     },
     {

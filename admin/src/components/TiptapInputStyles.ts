@@ -151,6 +151,13 @@ export const TiptapInputStyles = styled.div`
     margin: 0.75em 0;
   }
 
+  /* "Wide" images preview at full editor width (the real breakout happens on
+     the frontend's grid; the admin canvas has no side columns) */
+  [data-size='wide'] .image-wrapper,
+  [data-size='wide'] img {
+    width: 100%;
+  }
+
   /* Inline-block wrapper for positioning the resize handle relative to the image */
   .image-wrapper {
     position: relative;

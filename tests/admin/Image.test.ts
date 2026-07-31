@@ -76,6 +76,34 @@ describe('StrapiImage extension', () => {
       expect(attrs).not.toHaveProperty('data-align');
     });
 
+    describe('size attribute', () => {
+      it('defaults to "default"', () => {
+        expect(attrs).toHaveProperty('size');
+        expect((attrs.size as any).default).toBe('default');
+      });
+
+      it('parses from data-size, falling back to "default"', () => {
+        const parseHTML = (attrs.size as any).parseHTML as (el: HTMLElement) => string;
+        const wide = { getAttribute: (n: string) => (n === 'data-size' ? 'wide' : null) } as unknown as HTMLElement;
+        expect(parseHTML(wide)).toBe('wide');
+        const none = { getAttribute: () => null } as unknown as HTMLElement;
+        expect(parseHTML(none)).toBe('default');
+      });
+
+      it('only emits data-size when non-default (clean default markup)', () => {
+        const renderHTML = (attrs.size as any).renderHTML as (a: Record<string, unknown>) => Record<string, unknown>;
+        expect(renderHTML({ size: 'default' })).toEqual({});
+        expect(renderHTML({ size: null })).toEqual({});
+        expect(renderHTML({ size: 'wide' })).toEqual({ 'data-size': 'wide' });
+      });
+    });
+
+    it('exposes the setImageSize command', () => {
+      expect(typeof (StrapiImage as any).config.addCommands).toBe('function');
+      const commands = ((StrapiImage as any).config.addCommands as () => Record<string, unknown>).call({ name: 'image' });
+      expect(commands).toHaveProperty('setImageSize');
+    });
+
     it('includes caption attribute with default null and no HTML attribute output', () => {
       expect(attrs).toHaveProperty('caption');
       expect((attrs.caption as any).default).toBeNull();

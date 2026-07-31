@@ -5,6 +5,17 @@ import Image, { type ImageOptions } from '@tiptap/extension-image';
 interface StrapiImageOptions extends ImageOptions {
   enableContentCheck: boolean;
 }
+
+export type ImageSize = 'default' | 'wide';
+
+declare module '@tiptap/core' {
+  interface Commands<ReturnType> {
+    strapiImageSize: {
+      /** Sets the layout size of the selected image node. */
+      setImageSize: (size: ImageSize) => ReturnType;
+    };
+  }
+}
 import { ReactNodeViewRenderer, NodeViewWrapper, useEditorState } from '@tiptap/react';
 import type { NodeViewProps, Editor } from '@tiptap/react';
 import { useIntl } from 'react-intl';
@@ -20,7 +31,10 @@ export function ImageNodeViewReadOnly({ node }: NodeViewProps) {
   const height = typeof rawHeight === 'number' ? rawHeight : null;
 
   return (
-    <NodeViewWrapper data-drag-handle>
+    <NodeViewWrapper
+      data-drag-handle
+      data-size={node.attrs.size !== 'default' ? node.attrs.size : undefined}
+    >
       <img
         src={node.attrs.src}
         alt={node.attrs.alt ?? ''}
@@ -75,6 +89,26 @@ export const StrapiImage = Image.extend<StrapiImageOptions>({
           element.closest('figure')?.querySelector('figcaption')?.textContent?.trim() || null,
         renderHTML: () => ({}),
       },
+      // Layout size: 'default' = content column, 'wide' = symmetric breakout.
+      // Default markup stays clean — data-size only emitted when non-default.
+      size: {
+        default: 'default',
+        parseHTML: (element: HTMLElement) => element.getAttribute('data-size') ?? 'default',
+        renderHTML: (attributes: Record<string, unknown>) => {
+          const size = attributes.size;
+          if (!size || size === 'default') return {};
+          return { 'data-size': size };
+        },
+      },
+    };
+  },
+
+  addCommands() {
+    return {
+      setImageSize:
+        (size: ImageSize) =>
+        ({ commands }) =>
+          commands.updateAttributes(this.name, { size }),
     };
   },
 

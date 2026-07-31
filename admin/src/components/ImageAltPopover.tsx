@@ -5,6 +5,7 @@ import type { ImageOptions } from '@tiptap/extension-image';
 import { Popover, TextInput, IconButton } from '@strapi/design-system';
 import { Trash, Cross } from '@strapi/icons';
 import { useIntl } from 'react-intl';
+import { ToolbarButton } from './ToolbarButton';
 
 export function ImageNodeView({ node, updateAttributes, deleteNode, selected, extension }: NodeViewProps) {
   const { formatMessage } = useIntl();
@@ -173,7 +174,10 @@ export function ImageNodeView({ node, updateAttributes, deleteNode, selected, ex
   );
 
   return (
-    <NodeViewWrapper data-drag-handle>
+    <NodeViewWrapper
+      data-drag-handle
+      data-size={node.attrs.size !== 'default' ? node.attrs.size : undefined}
+    >
       <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <Popover.Anchor>
           <div
@@ -212,6 +216,24 @@ export function ImageNodeView({ node, updateAttributes, deleteNode, selected, ex
           </div>
         </Popover.Anchor>
         <Popover.Content side="bottom">
+          <div style={{ display: 'flex', gap: '4px', padding: '8px', paddingBottom: '0' }}>
+            <ToolbarButton
+              onClick={() => updateAttributes({ size: 'default' })}
+              icon={<span style={{ fontSize: '11px' }}>{formatMessage({ id: 'tiptap-editor.image.sizeDefault', defaultMessage: 'Default' })}</span>}
+              active={(node.attrs.size ?? 'default') === 'default'}
+              disabled={false}
+              tooltip={formatMessage({ id: 'tiptap-editor.image.sizeDefaultTooltip', defaultMessage: 'Content width' })}
+              marginLeft={0}
+            />
+            <ToolbarButton
+              onClick={() => updateAttributes({ size: 'wide' })}
+              icon={<span style={{ fontSize: '11px' }}>{formatMessage({ id: 'tiptap-editor.image.sizeWide', defaultMessage: 'Wide' })}</span>}
+              active={node.attrs.size === 'wide'}
+              disabled={false}
+              tooltip={formatMessage({ id: 'tiptap-editor.image.sizeWideTooltip', defaultMessage: 'Break out of the content column' })}
+              marginLeft={0}
+            />
+          </div>
           {resizeEnabled && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '8px', paddingBottom: '0' }}>
               <TextInput

@@ -432,7 +432,7 @@ Enables image insertion from the Strapi Media Library. When enabled, the toolbar
 - A **resize handle** (blue dot) appears at the bottom-right corner on hover — drag it to resize the image
 - The HTML `title` attribute is pre-filled from the asset's Media Library **caption** field on insert
 
-The image stores the URL (`src`), Strapi asset ID (`data-asset-id`), optional `caption`/`title`, and dimensions (`width`, `height`) in the Tiptap JSON output.
+The image stores the URL (`src`), Strapi asset ID (`data-asset-id`), optional `caption`/`title`, layout `size` (`default` | `wide`, serialized as `data-size` only when non-default; toggled in the popover or via `editor.chain().focus().setImageSize('wide').run()`), and dimensions (`width`, `height`) in the Tiptap JSON output.
 
 **Content safety:** If you remove `mediaLibrary` from a preset, existing images in content are preserved and rendered read-only — they are never silently deleted.
 
